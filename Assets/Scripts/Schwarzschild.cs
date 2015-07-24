@@ -3,20 +3,24 @@ using System.Collections;
 
 public class Schwarzschild : MonoBehaviour {
 
-	private Material material;
+	private Material material = null;
 
 	// Use this for initialization
 	void Awake() {
 		Shader shader = Shader.Find("Lens/Schwarzschild");
-		if (shader == null) {
-			Debug.Log("Shader not found.");
-			return;
+		if (shader != null) {
+			material = new Material (shader);
+		} else {
+			Debug.Log ("Shader not found.");
 		}
-		material = new Material(shader);
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void OnRenderImage(RenderTexture source, RenderTexture dest) {
+		if (material != null) {
+			Graphics.Blit (source, dest, material);
+		} else {
+			Graphics.Blit (source, dest);
+		}
 	}
 }
